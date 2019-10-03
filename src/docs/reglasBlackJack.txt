@@ -1,0 +1,12 @@
+1. El crupier repartirá dos cartas descubiertas a cada jugador y una a sí mismo.
+2. Después del reparto de cartas el crupier le dará paso al jugador situado más a su izquierda
+3. Los jugadores que se queden más lejos de 21 que el crupier o se hayan pasado pierden sus apuestas.
+4. Los jugadores que empaten con el crupier no ganan ni pierden, recuperan su apuesta.
+5. blackjack apuesta *1'5
+6. resto de jugadas ganadoras apuesta*1
+
+acciones del jugador:
+1. pedir cartas:  un jugador podrá pedir las cartas que deseen mientras su mano este por debajo de los 21 puntos. Si al pedir carta el jugador se pasa de 21, el crupier el retirará las cartas y las recogerá sus apuestas.
+2. plantarse: un jugador se puede plantar en cualquier momento.
+3. doblar: si valor de la mano es igual a 9,10 o 11 puede doblar, recibira una cara mas solo
+4. separar: si tienes dos cartas con valor de 10 pagas la misma apuesta y puedes tener dos manos, no se puede hacer blackjack de esta forma, aunque hagas 21
