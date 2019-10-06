@@ -3,7 +3,8 @@ import {generatePlayer, generateLayout} from './controlCpu/controlCpu';
 
 const dom = {
     askButton: document.getElementById("askButton"),
-    downButton: document.getElementById("downButton")
+    downButton: document.getElementById("downButton"),
+    raiseButton: document.getElementById("raiseButton")
 }
 
 const cpuPlayers = generatePlayer(5);
@@ -14,12 +15,14 @@ let dealer = {
     id: 1,
     hand: [],
     score: 0,
+    bet: 0,
     down: false
 };
 
 let player = {
     id: 0,
     hand: [],
+    bet: 0,
     score: 0
 };
 
@@ -60,8 +63,8 @@ const giveCard = (person) => {
         person.hand.push(distributeCard(deck));
 }
 
-//intentar optimizar
-const calculateScore = (person) => {
+
+const calculateScore = (person) => { //intentar optimizar
     let score = 0;
     let ases = 0;
     person.hand.forEach(element => {
@@ -100,14 +103,59 @@ const downCpuPlayer = (cpu) => {
         if(random == 1);
             cpu.down = true;
     }
-
-    if(cpu.down){
-        //imperdor que ese jugador pida mas cartas
-        //calculateScore(cpu);
-    }
 } 
 
-const determinateWinner = () => {
+const sortJSON = (data, key, orden) => {
+    return data.sort(function (a, b){
+        var x = a[key],
+        y = b[key];
+
+        if (orden === 'asc') {
+            return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+        }
+
+        if (orden === 'desc') {
+            return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+        }
+    });
+}
+
+const determinateWinner = (cpus, person, dealer) => { //terminar
+    cpus = cpus.concat(person, dealer)
+    let scores = sortJSON(cpus, 'score', 'desc');
+    console.log(scores)
+    //comprobar numero de cartas para los que hicieron blackjack
+    //comprobar el score del dealer y determinar los perdedores y los ganadores
+}
+
+const makeBet = (cpu) => {
+    let score = 0;
+    score += calculateScore(cpu);
+
+    if(score == 21){
+        return cpu.bet =  Math.ceil((Math.random() * 10) + 5);
+    }
+    else if(score >= 19){
+        return cpu.bet =  Math.ceil((Math.random() * 7) + 3);
+    }
+    else if(score >= 16 || score < 16){
+        return cpu.bet =  Math.ceil((Math.random() * 3) + 1);
+    }
+}
+
+const raiseBet = (person) => {
+    if (!person.down){ // si la persona se planto, no se le muestra mas cartas
+        if(person.id == 0){ // si es el jugador
+            document.querySelector('.wager').innerHTML = `Apuesta: ${person.bet++}`
+        }
+        else if(person.id == 1){ // si es el dealer
+            document.querySelector('.dealerWager').innerHTML = `Apuesta: ${makeBet(person)}`
+        }
+
+        else{
+            document.querySelector(`.cpu${person.id}Wager`).innerHTML = `Apuesta: ${makeBet(person)}`
+        }
+    }
 }
 
 const initGame = () => {
@@ -121,11 +169,14 @@ const initGame = () => {
         showHand(cpuPlayers[i]);
         giveCard(cpuPlayers[i]);
         showHand(cpuPlayers[i]);
+        raiseBet(cpuPlayers[i]);
         downCpuPlayer(cpuPlayers[i]);
     }
 
     giveCard(dealer);
     showHand(dealer);
+    raiseBet(dealer);
+    downCpuPlayer(dealer);
 }
 
 
@@ -135,10 +186,13 @@ const startTurn = () => {
     
     giveCard(dealer);
     showHand(dealer);
+    raiseBet(dealer);
+    downCpuPlayer(dealer);
     
     for(let i = 0; i<cpuPlayers.length; i++){
         giveCard(cpuPlayers[i]);
         showHand(cpuPlayers[i]);
+        raiseBet(cpuPlayers[i]);
         downCpuPlayer(cpuPlayers[i]);
     }
 
@@ -149,9 +203,12 @@ generateLayout();
 initGame();
 
 dom.askButton.addEventListener('click', startTurn);
-dom.downButton.addEventListener('click', function(){
+dom.raiseButton.addEventListener('click', function(){
+    raiseBet(player);
+});
+dom.downButton.addEventListener('click', function(){ //terminar
     console.log(calculateScore(player));
-    //finalizar juego
-    //determinateWinner();
+    //impedir que el jugador pueda seguir pidiendo,pero que el dealer pueda seguir epartiendo hasta que todos se plantes
+    determinateWinner(cpuPlayers, player, dealer);
 });
 

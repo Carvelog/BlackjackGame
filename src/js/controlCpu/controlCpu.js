@@ -6,6 +6,7 @@ const generatePlayer = (numPlayers) => {
             id: i,
             hand: [],
             down: false,
+            bet: 0,
             score: 0
         })
     }
@@ -19,6 +20,7 @@ const generateLayout = () => {
         let div = document.createElement('div');
         div.className = `player${players[i].id}`;
         div.innerHTML = `<p>CPU ${players[i].id-1}(Jugador)</p>
+                         <pc class="cpu${players[i].id}Wager">Apuesta:</p>
                          <div class="hand">
                             <p>${players[i].hand}</p>
                          </div>`;
