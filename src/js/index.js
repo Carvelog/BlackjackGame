@@ -4,14 +4,15 @@ import {generatePlayer, generateLayout} from './controlCpu/controlCpu';
 const dom = {
     askButton: document.getElementById("askButton"),
     downButton: document.getElementById("downButton"),
-    raiseButton: document.getElementById("raiseButton")
+    raiseButton: document.getElementById("raiseButton"),
+    distributeButton: document.getElementById("distributeButton")
 }
 
-const cpuPlayers = generatePlayer(5);
-
+const cpuPlayers = generatePlayer(4);
 let deck = generateDeck();
 
 let dealer = {
+    name: 'Dealer',
     id: 1,
     hand: [],
     score: 0,
@@ -20,11 +21,16 @@ let dealer = {
 };
 
 let player = {
+    name: 'Player',
     id: 0,
     hand: [],
     bet: 0,
-    score: 0
+    score: 0,
+    down: false
 };
+
+let allPlayers = [], blackJack = [], winners = [], loosers = [];
+allPlayers = allPlayers.concat(cpuPlayers, dealer, player);
 
 const makeHand = (parent, person) => {
     let div = document.createElement('div');
@@ -123,9 +129,36 @@ const sortJSON = (data, key, orden) => {
 const determinateWinner = (cpus, person, dealer) => { //terminar
     cpus = cpus.concat(person, dealer)
     let scores = sortJSON(cpus, 'score', 'desc');
-    console.log(scores)
-    //comprobar numero de cartas para los que hicieron blackjack
-    //comprobar el score del dealer y determinar los perdedores y los ganadores
+    console.log(scores);
+
+    while(scores.length > 0){
+        if(scores[0].score == 21 && scores[0].hand.length == 2){
+            blackJack.push(scores[0]);
+            scores = _.drop(scores);
+        }
+        else if(scores[0].score > 21 || scores[0].score <= dealer.score){
+            loosers.push(scores[0]);
+            scores = _.drop(scores);
+        }
+        else if(scores[0].score > dealer.score && scores[0].score < 21){
+            winners.push(scores[0]);
+            scores = _.drop(scores);
+        }
+    }
+
+    if(blackJack.length > 0){
+        blackJack.forEach(element => {
+            console.log(`Ganador ${element.name}`);
+        })
+    }
+    
+    winners.forEach(element => {
+        console.log(`Ganador ${element.name}`);
+    })
+    
+    loosers.forEach(element => {
+        console.log(`Perdedores ${element.name}`);
+    })
 }
 
 const makeBet = (cpu) => {
@@ -179,11 +212,18 @@ const initGame = () => {
     downCpuPlayer(dealer);
 }
 
+const isGameFinished = () => {
+    let howManyDown = 0;
 
-const startTurn = () => {
-    giveCard(player);
-    showHand(player);
-    
+    allPlayers.forEach(element => {
+        if(element.down) howManyDown++;
+    });
+
+    if(howManyDown == allPlayers.length) return true;
+    else return false;
+}
+
+const cpuTurn = () => {
     giveCard(dealer);
     showHand(dealer);
     raiseBet(dealer);
@@ -196,19 +236,29 @@ const startTurn = () => {
         downCpuPlayer(cpuPlayers[i]);
     }
 
+    if(isGameFinished()){
+        determinateWinner(cpuPlayers, player, dealer);
+    }
 }
-
 
 generateLayout();
 initGame();
 
-dom.askButton.addEventListener('click', startTurn);
+dom.askButton.addEventListener('click', function(){
+    giveCard(player);
+    showHand(player);
+    cpuTurn();
+});
+dom.distributeButton.addEventListener('click', cpuTurn);
 dom.raiseButton.addEventListener('click', function(){
     raiseBet(player);
 });
-dom.downButton.addEventListener('click', function(){ //terminar
-    console.log(calculateScore(player));
-    //impedir que el jugador pueda seguir pidiendo,pero que el dealer pueda seguir epartiendo hasta que todos se plantes
-    determinateWinner(cpuPlayers, player, dealer);
+dom.downButton.addEventListener('click', function(){
+    player.down = true;
+    calculateScore(player)
+    dom.askButton.remove();
+    document.querySelector('.dealerButton').style.display = 'block';
+    if(isGameFinished()){
+        determinateWinner(cpuPlayers, player, dealer);
+    }
 });
-

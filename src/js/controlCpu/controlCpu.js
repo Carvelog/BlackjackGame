@@ -3,6 +3,7 @@ let players = [];
 const generatePlayer = (numPlayers) => {
     for(let i=2; i<=numPlayers+1; i++){
         players.push({
+            name: `CPU ${i-1}`,
             id: i,
             hand: [],
             down: false,
