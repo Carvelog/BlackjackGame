@@ -34,7 +34,7 @@ allPlayers = allPlayers.concat(cpuPlayers, dealer, player);
 
 const makeHand = (parent, person) => {
     let div = document.createElement('div');
-    div.className = 'hand';
+    div.className = 'card';
     div.textContent = `${person.hand[(person.hand.length)-1].value} ${person.hand[(person.hand.length)-1].stick}`;
     parent.appendChild(div);
 }
@@ -55,7 +55,8 @@ const showHand = (person) => {
         }
 
         else{
-            let parent = document.querySelector(`.player${person.id}`);
+            let parent = document.querySelector(`.p${person.id}`);
+            parent = parent.firstElementChild;
             makeHand(parent, person);
         }
     }
@@ -65,8 +66,13 @@ const showHand = (person) => {
  * reparte cartas a los jugadores
 */
 const giveCard = (person) => {
-    if (!person.down) // si la persona se planto no se le da mas cartas
-        person.hand.push(distributeCard(deck));
+    if(deck.length > 0){
+        if (!person.down) // si la persona se planto no se le da mas cartas
+            person.hand.push(distributeCard(deck));
+    }
+    else {
+        dom.askButton.remove();
+    }
 }
 
 
@@ -94,12 +100,14 @@ const sortJSON = (data, key, orden) => {
     });
 }
 
-const determinateWinner = (cpus, person, dealer) => { //terminar
+const determinateWinner = (cpus, person, dealer) => {
     cpus = cpus.concat(person, dealer)
     let scores = sortJSON(cpus, 'score', 'desc');
     console.log(scores)
 
     while(scores.length > 0){
+        console.log(scores[0].id);
+        console.log(scores[0].score);
         if(scores[0].score == 21 && scores[0].hand.length == 2){
             blackJack.push(scores[0]);
             scores = _.drop(scores);
@@ -225,6 +233,7 @@ dom.distributeButton.addEventListener('click', function(){
 dom.raiseButton.addEventListener('click', function(){
     raiseBet(player);
 });
+
 dom.downButton.addEventListener('click', function(){
     player.down = true;
     calculateScore(player)

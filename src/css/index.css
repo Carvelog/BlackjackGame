@@ -1,5 +1,135 @@
-.mesa .dealer .dealerButton {
+body {
+  margin: auto;
+  width: 800px;
+}
+body .mesa {
+  margin-top: 20px;
+  display: grid;
+  grid-gap: 15px 0;
+  background: coral;
+  border-radius: 10px;
+}
+body .mesa .dealer {
+  width: 200px;
+  justify-self: center;
+  border: solid black;
+  background: #e92020;
+  border-radius: 10px;
+  margin-top: 15px;
+}
+body .mesa .dealer p {
+  font-size: 20px;
+  text-align: center;
+  margin: 5px;
+}
+body .mesa .dealer .dealerButton {
   display: none;
+}
+body .mesa .dealer .dealerButton button {
+  outline: none;
+  border: solid white;
+  color: white;
+  font-size: 1.25em;
+  border-radius: 10px;
+  background: transparent;
+}
+body .mesa .dealer .dealerButton button:hover {
+  outline: none;
+  border: solid black;
+  color: black;
+  cursor: pointer;
+  font-size: 1.25em;
+  border-radius: 10px;
+  background: transparent;
+}
+body .mesa .dealer .dealerHand {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+body .mesa .dealer .dealerHand .card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+  height: 50px;
+  width: 35px;
+  background: white;
+  border: 1px solid black;
+  box-shadow: 0 0 5px black;
+}
+body .mesa .players {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 0 10px;
+  margin: 15px;
+}
+body .mesa .players .player {
+  padding: 0;
+  border: solid black;
+  background: #378324;
+  display: grid;
+  grid-template-rows: auto;
+  justify-content: center;
+  border-radius: 10px;
+}
+body .mesa .players .player p {
+  font-size: 20px;
+  text-align: center;
+  margin: 5px;
+}
+body .mesa .players .pPerson {
+  display: grid;
+  justify-items: center;
+}
+body .mesa .players .pPerson .playerHand {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+body .mesa .players .pPerson .playerHand .card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+  height: 50px;
+  width: 35px;
+  background: white;
+  border: 1px solid black;
+  box-shadow: 0 0 5px black;
+}
+body .mesa .players .pPerson .actionButtons ul {
+  margin: 5px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+  grid-gap: 0 15px;
+  list-style: none;
+}
+body .mesa .players .pPerson .actionButtons ul button {
+  outline: none;
+  border: solid white;
+  color: white;
+  font-size: 1.25em;
+  border-radius: 10px;
+  background: transparent;
+}
+body .mesa .players .cpuHand {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+body .mesa .players .cpuHand .card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+  height: 50px;
+  width: 35px;
+  background: white;
+  border: 1px solid black;
+  box-shadow: 0 0 5px black;
 }
 
 /*# sourceMappingURL=index.css.map */

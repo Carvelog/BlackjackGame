@@ -1,7 +1,146 @@
-.mesa {
-    .dealer {
-        .dealerButton {
-            display: none;
+@mixin handStyle {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    .card {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 5px;
+        height: 50px;
+        width: 35px;
+        background: white;
+        border: 1px solid black;
+        box-shadow: 0 0 5px black;
+    }
+}
+
+@mixin pStyle {
+    font-size: 20px;
+    text-align: center;
+    margin: 5px;
+}
+
+@mixin buttonStyle {
+    outline: none;
+    border: solid white;
+    color: white;
+    font-size: 1.25em;
+    border-radius: 10px;
+    background: transparent;
+}
+
+@mixin buttonHoverStyle {
+    outline: none;
+    border: solid black;
+    color: black;
+    cursor: pointer;
+    font-size: 1.25em;
+    border-radius: 10px;
+    background: transparent;
+}
+
+body{
+    margin: auto;
+    width: 800px;
+
+    .mesa {
+        margin-top: 20px;
+        display: grid;
+        grid-gap: 15px 0;
+        background: coral;
+        border-radius: 10px;
+        
+        .dealer {
+            width: 200px;
+            justify-self: center;
+            border: solid black;
+            background: rgb(233, 32, 32);
+            border-radius: 10px;
+            margin-top: 15px;
+
+            p {
+                @include pStyle();
+            }
+
+            .dealerButton {
+                display: none;
+
+                button {
+                    @include buttonStyle();
+                }
+                
+                button:hover {
+                    @include buttonHoverStyle
+                }
+                
+            }
+
+            .dealerHand {
+                @include handStyle();
+                
+            }
+        }
+        .players {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-gap: 0 10px;
+            margin: 15px;
+
+            .player {
+                padding: 0;
+                border: solid black;
+                background: rgb(55, 131, 36);
+                display: grid;
+                grid-template-rows: auto;
+                justify-content: center;
+                border-radius: 10px;
+
+                p {
+                    @include pStyle();
+                }
+            }
+
+            .pPerson {
+                display: grid;
+                justify-items: center;
+                
+               
+                .playerHand {
+                   @include handStyle();
+                }
+
+                .actionButtons {
+                    
+                    ul {
+                        margin: 5px;
+                        padding: 0;
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        justify-items: center;
+                        grid-gap: 0 15px;
+                        list-style: none;
+
+                        button {
+                            outline: none;
+                            border: solid white;
+                            color: white;
+                            font-size: 1.25em;
+                            border-radius: 10px;
+                            background: transparent;
+                        }
+
+                        button:hover {
+                            
+                        }
+                    } 
+                }
+            }
+
+            .cpuHand {
+               @include handStyle();
+            }
         }
     }
 }

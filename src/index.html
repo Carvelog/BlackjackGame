@@ -12,21 +12,25 @@
 <body>
     <div class="mesa">
         <div class="dealer">
+            <div class="dealerHand"></div>
             <p class="name1">Dealer</p>
             <p class="dealerWager">Apuesta: </p>
-            <div class="dealerHand"></div>
             <div class="dealerButton">
                 <button id="distributeButton">Repartir</button>
             </div>
         </div>
-        <div class="playerPerson">
-            <p class="name0">Jugador</p>
-            <p class="wager">Apuesta: </p>
-            <div class="playerHand"></div>
-            <div class="actionButtons">
-                <button id="askButton">Pedir</button>
-                <button id="raiseButton">Subir apuesta</button>
-                <button id="downButton">Plantarse</button>
+        <div class="players">
+            <div class="player pPerson">
+                <div class="playerHand"></div>
+                <p class="name0">Jugador</p>
+                <p class="wager">Apuesta: </p>
+                <div class="actionButtons">
+                    <ul>
+                        <button id="askButton">Pedir</button>
+                        <button id="raiseButton">Subir apuesta</button>
+                        <button id="downButton">Plantarse</button>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
