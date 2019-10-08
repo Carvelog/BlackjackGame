@@ -1,5 +1,5 @@
-import {generateDeck, translateCard, distributeCard} from './generateDeck/generateDeck';
-import {generatePlayer, generateLayout} from './controlCpu/controlCpu';
+import {generateDeck, distributeCard} from './generateDeck/generateDeck';
+import {generatePlayer, generateLayout, makeCpuBet, calculateScore, downCpuPlayer} from './controlCpu/controlCpu';
 
 const dom = {
     askButton: document.getElementById("askButton"),
@@ -70,47 +70,15 @@ const giveCard = (person) => {
 }
 
 
-const calculateScore = (person) => { //intentar optimizar
-    let score = 0;
-    let ases = 0;
-    person.hand.forEach(element => {
-        if(translateCard(element.value) == 'A'){
-            ases++;
-            score += 11;
-        }
-        else score += translateCard(element.value)
-        
-        do {
-            if(score > 21 && ases > 0){
-                score -= 10;
-            }
-            ases--;
-        } while(ases > 0)
-    });
-
-    person.score = score;
-    return score;
-}
-
-const downCpuPlayer = (cpu) => {
-    let score = 0;
-    score += calculateScore(cpu);
-
-    if(score >= 21){
-        cpu.down = true;
-    }
-    else if(score >= 19){
-        const random = Math.ceil((Math.random() * 10) + 1);
-        if(random < 8 && random > 0);
-            cpu.down = true;
-    }
-    else if(score >= 16){
-        const random = Math.ceil((Math.random() * 3) + 1);
-        if(random == 1);
-            cpu.down = true;
-    }
-} 
-
+/**
+ * Ordenar JSON por medio del valor de una de sus propiedades
+ * @author Fernando Magrosoto V. (@fmagrosoto)
+ * @example sortJSON(json, propiedad, el orden)
+ * @licence MIT
+ * @version 1.0
+ * @copyleft 2016 - Fernando Magrosoto V.
+ * 
+ */
 const sortJSON = (data, key, orden) => {
     return data.sort(function (a, b){
         var x = a[key],
@@ -129,7 +97,7 @@ const sortJSON = (data, key, orden) => {
 const determinateWinner = (cpus, person, dealer) => { //terminar
     cpus = cpus.concat(person, dealer)
     let scores = sortJSON(cpus, 'score', 'desc');
-    console.log(scores);
+    console.log(scores)
 
     while(scores.length > 0){
         if(scores[0].score == 21 && scores[0].hand.length == 2){
@@ -144,49 +112,48 @@ const determinateWinner = (cpus, person, dealer) => { //terminar
             winners.push(scores[0]);
             scores = _.drop(scores);
         }
+        else {
+            alert('Ha ocurrido un error.');
+            scores = _.drop(scores);
+        }
     }
 
     if(blackJack.length > 0){
         blackJack.forEach(element => {
-            console.log(`Ganador ${element.name}`);
+            let p = document.querySelector(`.name${element.id}`);
+            p.className += ' blackjack';
+            p.textContent += ` Gana (blackjack) Total: ${element.bet * 1.5}`; 
         })
     }
     
-    winners.forEach(element => {
-        console.log(`Ganador ${element.name}`);
-    })
+    if(winners.length > 0){
+        winners.forEach(element => {
+            let p = document.querySelector(`.name${element.id}`);
+            p.className += ' winner';
+            p.textContent += ` Gana Total: ${element.bet * 1}`;
+        })
+    }
     
-    loosers.forEach(element => {
-        console.log(`Perdedores ${element.name}`);
-    })
-}
-
-const makeBet = (cpu) => {
-    let score = 0;
-    score += calculateScore(cpu);
-
-    if(score == 21){
-        return cpu.bet =  Math.ceil((Math.random() * 10) + 5);
-    }
-    else if(score >= 19){
-        return cpu.bet =  Math.ceil((Math.random() * 7) + 3);
-    }
-    else if(score >= 16 || score < 16){
-        return cpu.bet =  Math.ceil((Math.random() * 3) + 1);
+    if(loosers.length > 0){
+        loosers.forEach(element => {
+            let p = document.querySelector(`.name${element.id}`);
+            p.className += ' loosers';
+            p.textContent += ` Pierde Total: ${element.bet}`;
+        })
     }
 }
 
 const raiseBet = (person) => {
     if (!person.down){ // si la persona se planto, no se le muestra mas cartas
         if(person.id == 0){ // si es el jugador
-            document.querySelector('.wager').innerHTML = `Apuesta: ${person.bet++}`
+            document.querySelector('.wager').innerHTML = `Apuesta: ${(person.bet += 1)}`
         }
         else if(person.id == 1){ // si es el dealer
-            document.querySelector('.dealerWager').innerHTML = `Apuesta: ${makeBet(person)}`
+            document.querySelector('.dealerWager').innerHTML = `Apuesta: ${makeCpuBet(person)}`
         }
 
         else{
-            document.querySelector(`.cpu${person.id}Wager`).innerHTML = `Apuesta: ${makeBet(person)}`
+            document.querySelector(`.cpu${person.id}Wager`).innerHTML = `Apuesta: ${makeCpuBet(person)}`
         }
     }
 }
@@ -249,16 +216,18 @@ dom.askButton.addEventListener('click', function(){
     showHand(player);
     cpuTurn();
 });
-dom.distributeButton.addEventListener('click', cpuTurn);
+dom.distributeButton.addEventListener('click', function(){
+    cpuTurn();
+    if(isGameFinished()){
+        dom.distributeButton.remove();
+    }
+});
 dom.raiseButton.addEventListener('click', function(){
     raiseBet(player);
 });
 dom.downButton.addEventListener('click', function(){
     player.down = true;
     calculateScore(player)
-    dom.askButton.remove();
     document.querySelector('.dealerButton').style.display = 'block';
-    if(isGameFinished()){
-        determinateWinner(cpuPlayers, player, dealer);
-    }
+    dom.askButton.remove();
 });
