@@ -1,0 +1,20 @@
+{
+  "name": "blackjack",
+  "version": "1.0.0",
+  "description": "Black jack browser game",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel ./src/index.html",
+    "sass": "sass --watch ./src/css/index.scss ./src/css/index.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bolften/BlackjackGame.git"
+  },
+  "author": "Carlos Arvelo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bolften/BlackjackGame/issues"
+  },
+  "homepage": "https://github.com/bolften/BlackjackGame#readme"
+}

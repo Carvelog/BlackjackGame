@@ -1,86 +1,75 @@
 body {
   margin: auto;
-  width: 800px;
+  width: 1000px;
 }
 body .mesa {
+  height: 500px;
   margin-top: 20px;
   display: grid;
-  grid-gap: 15px 0;
-  background: coral;
-  border-radius: 10px;
+  grid-template-rows: 1fr 3fr;
+  justify-items: stretch;
+  background: #378324;
+  border: solid #531717;
+  border-radius: 10px 10px 400px 400px;
 }
 body .mesa .dealer {
-  width: 200px;
-  justify-self: center;
   border: solid black;
+  margin-top: 10px;
   background: #e92020;
   border-radius: 10px;
-  margin-top: 15px;
+  justify-self: center;
+  width: 200px;
+  height: 100%;
 }
 body .mesa .dealer p {
   font-size: 20px;
   text-align: center;
   margin: 5px;
+  color: gold;
 }
 body .mesa .dealer .dealerButton {
-  display: none;
+  margin: 5px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  grid-gap: 0 5px;
+  list-style: none;
 }
 body .mesa .dealer .dealerButton button {
   outline: none;
-  border: solid white;
+  border: 2px solid white;
   color: white;
-  font-size: 1.25em;
   border-radius: 10px;
   background: transparent;
 }
 body .mesa .dealer .dealerButton button:hover {
-  outline: none;
-  border: solid black;
-  color: black;
   cursor: pointer;
-  font-size: 1.25em;
-  border-radius: 10px;
-  background: transparent;
-}
-body .mesa .dealer .dealerHand {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-body .mesa .dealer .dealerHand .card {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 5px;
-  height: 50px;
-  width: 35px;
-  background: white;
-  border: 1px solid black;
-  box-shadow: 0 0 5px black;
 }
 body .mesa .players {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-gap: 0 10px;
-  margin: 15px;
+  display: flex;
+  justify-content: space-evenly;
 }
 body .mesa .players .player {
+  border: solid gold;
   padding: 0;
-  border: solid black;
-  background: #378324;
-  display: grid;
-  grid-template-rows: auto;
-  justify-content: center;
+  width: 150px;
+  height: 150px;
   border-radius: 10px;
 }
 body .mesa .players .player p {
   font-size: 20px;
   text-align: center;
   margin: 5px;
+  color: gold;
+}
+body .mesa .players .cpu1, body .mesa .players .cpu2 {
+  order: -1;
+}
+body .mesa .players .cpu2, body .mesa .players .cpu3 {
+  align-self: center;
 }
 body .mesa .players .pPerson {
-  display: grid;
-  justify-items: center;
+  align-self: flex-end;
 }
 body .mesa .players .pPerson .playerHand {
   display: flex;
@@ -91,45 +80,89 @@ body .mesa .players .pPerson .playerHand .card {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 5px;
   height: 50px;
   width: 35px;
   background: white;
   border: 1px solid black;
   box-shadow: 0 0 5px black;
+  border-radius: 4px;
 }
-body .mesa .players .pPerson .actionButtons ul {
-  margin: 5px;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  justify-items: center;
-  grid-gap: 0 15px;
-  list-style: none;
+body .mesa .players .pPerson .playerHand .C:after {
+  content: url("../img/clubs.png");
 }
-body .mesa .players .pPerson .actionButtons ul button {
-  outline: none;
-  border: solid white;
-  color: white;
-  font-size: 1.25em;
-  border-radius: 10px;
-  background: transparent;
+body .mesa .players .pPerson .playerHand .S:after {
+  content: url("../img/spades.png");
 }
-body .mesa .players .cpuHand {
+body .mesa .players .pPerson .playerHand .H:after {
+  content: url("../img/heart.png");
+}
+body .mesa .players .pPerson .playerHand .D:after {
+  content: url("../img/diamonds.png");
+}
+body .mesa .cpuHand {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
-body .mesa .players .cpuHand .card {
+body .mesa .cpuHand .card {
+  height: 50px;
+  width: 35px;
+  border: 1px solid black;
+  box-shadow: 0 0 5px black;
+  border-radius: 4px;
+  font-size: 0;
+  content: url("../img/back.png");
+}
+body .actionButtons ul {
+  margin: 5px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  grid-gap: 0 5px;
+  list-style: none;
+}
+body .actionButtons ul button {
+  outline: none;
+  border: 2px solid black;
+  color: black;
+  border-radius: 10px;
+  background: transparent;
+}
+body .actionButtons ul button:hover {
+  cursor: pointer;
+}
+
+.hideElement {
+  display: none;
+}
+
+.showAll {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.showAll .card {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 5px;
   height: 50px;
   width: 35px;
   background: white;
   border: 1px solid black;
   box-shadow: 0 0 5px black;
+  border-radius: 4px;
+}
+.showAll .C:after {
+  content: url("../img/clubs.png");
+}
+.showAll .S:after {
+  content: url("../img/spades.png");
+}
+.showAll .H:after {
+  content: url("../img/heart.png");
+}
+.showAll .D:after {
+  content: url("../img/diamonds.png");
 }
 
 /*# sourceMappingURL=index.css.map */

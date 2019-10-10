@@ -1,4 +1,4 @@
-const palos = ['C', 'D', 'P', 'T'];
+const palos = ['H', 'D', 'S', 'C'];
 let courtCards = ['A', 'J', 'Q', 'K'];
 /** @function translateCard
  * devuelve el valor de las figuras en el juego

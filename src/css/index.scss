@@ -1,18 +1,55 @@
-@mixin handStyle {
+@mixin handStyle($option) {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
 
+    @if $option == "show" {
+        @include cardStyle();
+    }
+    @if $option == "hide" {
+        @include backCardStyle();
+    }
+}
+
+@mixin cardStyle {
     .card {
         display: flex;
         justify-content: center;
         align-items: center;
-        margin: 5px;
         height: 50px;
         width: 35px;
         background: white;
         border: 1px solid black;
         box-shadow: 0 0 5px black;
+        border-radius: 4px;
+    }
+
+    .C:after { 
+        content: url("../img/clubs.png");
+    }
+
+    .S:after {
+        content: url("../img/spades.png");
+    }
+
+    .H:after {
+        content: url("../img/heart.png");
+    }
+
+    .D:after {
+        content: url("../img/diamonds.png");
+    }
+}
+
+@mixin backCardStyle {
+    .card {
+        height: 50px;
+        width: 35px;
+        border: 1px solid black;
+        box-shadow: 0 0 5px black;
+        border-radius: 4px;
+        font-size: 0;
+        content: url("../img/back.png");
     }
 }
 
@@ -20,127 +57,129 @@
     font-size: 20px;
     text-align: center;
     margin: 5px;
+    color: gold;
 }
 
-@mixin buttonStyle {
+@mixin buttonStyle($color) {
     outline: none;
-    border: solid white;
-    color: white;
-    font-size: 1.25em;
-    border-radius: 10px;
-    background: transparent;
-}
-
-@mixin buttonHoverStyle {
-    outline: none;
-    border: solid black;
-    color: black;
-    cursor: pointer;
-    font-size: 1.25em;
+    border: 2px solid $color;
+    color: $color;
     border-radius: 10px;
     background: transparent;
 }
 
 body{
     margin: auto;
-    width: 800px;
-
+    width: 1000px;
+    
     .mesa {
+        height: 500px;
         margin-top: 20px;
         display: grid;
-        grid-gap: 15px 0;
-        background: coral;
-        border-radius: 10px;
+        grid-template-rows: 1fr 3fr;
+        justify-items: stretch;
+        background: rgb(55, 131, 36);
+        border: solid rgb(83, 23, 23);
+        border-radius: 10px 10px 400px 400px;
         
         .dealer {
-            width: 200px;
-            justify-self: center;
             border: solid black;
+            margin-top: 10px;
             background: rgb(233, 32, 32);
             border-radius: 10px;
-            margin-top: 15px;
+            justify-self: center;
+            width: 200px;
+            height: 100%;
 
             p {
                 @include pStyle();
             }
 
             .dealerButton {
-                display: none;
+                margin: 5px;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                grid-gap: 0 5px;
+                list-style: none;
 
                 button {
-                    @include buttonStyle();
+                    @include buttonStyle(white);
                 }
                 
                 button:hover {
-                    @include buttonHoverStyle
+                    cursor: pointer;
                 }
                 
             }
 
-            .dealerHand {
-                @include handStyle();
-                
-            }
+           
         }
-        .players {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            grid-gap: 0 10px;
-            margin: 15px;
+
+        .players{
+            display: flex;
+            justify-content: space-evenly;
 
             .player {
+                border: solid gold;
                 padding: 0;
-                border: solid black;
-                background: rgb(55, 131, 36);
-                display: grid;
-                grid-template-rows: auto;
-                justify-content: center;
+                width: 150px;
+                height: 150px;
                 border-radius: 10px;
-
+                
                 p {
                     @include pStyle();
                 }
             }
 
-            .pPerson {
-                display: grid;
-                justify-items: center;
-                
-               
-                .playerHand {
-                   @include handStyle();
-                }
-
-                .actionButtons {
-                    
-                    ul {
-                        margin: 5px;
-                        padding: 0;
-                        display: grid;
-                        grid-template-columns: repeat(3, 1fr);
-                        justify-items: center;
-                        grid-gap: 0 15px;
-                        list-style: none;
-
-                        button {
-                            outline: none;
-                            border: solid white;
-                            color: white;
-                            font-size: 1.25em;
-                            border-radius: 10px;
-                            background: transparent;
-                        }
-
-                        button:hover {
-                            
-                        }
-                    } 
-                }
+            .cpu1, .cpu2 {
+                order: -1;
             }
 
-            .cpuHand {
-               @include handStyle();
+            .cpu2, .cpu3 {
+                align-self: center;
+            }
+
+             .pPerson {
+                align-self: flex-end;
+
+                .playerHand {
+                    @include handStyle("show");
+                }
+            }
+        }
+        .cpuHand {
+            @include handStyle("hide");
+        }
+
+        
+    }
+
+    .actionButtons {
+                    
+        ul {
+            margin: 5px;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            grid-gap: 0 5px;
+            list-style: none;
+
+            button {
+                @include buttonStyle(black);
+            }
+
+            button:hover {
+                cursor: pointer;
             }
         }
     }
+}
+
+.hideElement {
+    display: none;
+}
+
+.showAll {
+    @include handStyle("show");
 }

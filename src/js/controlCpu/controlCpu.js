@@ -76,10 +76,10 @@ const generateLayout = () => {
 
     for(let i=0; i<players.length; i++){
         let div = document.createElement('div');
-        div.className = `player p${players[i].id}`;
-        div.innerHTML = `<div class="cpuHand"></div>
-                         <p class="name${players[i].id}">CPU ${players[i].id-1}(Jugador)</p>
-                         <p class="cpu${players[i].id}Wager">Apuesta:</p>`;
+        div.className = `player cpu${(players[i].id) - 1}`;
+        div.innerHTML = `<p class="name${players[i].id}">CPU ${players[i].id-1}(Jugador)</p>
+                         <p class="cpu${players[i].id}Wager">Apuesta:</p>
+                         <div class="cpuHand"></div>`;
         divMesa.appendChild(div);
     }
 

@@ -34,8 +34,8 @@ allPlayers = allPlayers.concat(cpuPlayers, dealer, player);
 
 const makeHand = (parent, person) => {
     let div = document.createElement('div');
-    div.className = 'card';
-    div.textContent = `${person.hand[(person.hand.length)-1].value} ${person.hand[(person.hand.length)-1].stick}`;
+    div.className = `card ${person.hand[(person.hand.length)-1].stick}`;
+    div.textContent = `${person.hand[(person.hand.length)-1].value}`;
     parent.appendChild(div);
 }
 
@@ -50,13 +50,13 @@ const showHand = (person) => {
         }
 
         else if(person.id == 1){ // si es el jugador
-            let parent = document.querySelector('.dealerHand');
+            let parent = document.querySelector('.cpuHand');
             makeHand(parent, person);
         }
 
         else{
-            let parent = document.querySelector(`.p${person.id}`);
-            parent = parent.firstElementChild;
+            let parent = document.querySelector(`.cpu${(person.id) - 1}`);
+            parent = parent.lastElementChild;
             makeHand(parent, person);
         }
     }
@@ -126,8 +126,16 @@ const determinateWinner = (cpus, person, dealer) => {
         }
     }
 
+    let div = document.querySelectorAll('.cpuHand');
+    console.log(div)
+    div.forEach(element => {
+        element.className = "showAll"
+    })
+    
+
     if(blackJack.length > 0){
         blackJack.forEach(element => {
+            
             let p = document.querySelector(`.name${element.id}`);
             p.className += ' blackjack';
             p.textContent += ` Gana (blackjack) Total: ${element.bet * 1.5}`; 
@@ -136,6 +144,7 @@ const determinateWinner = (cpus, person, dealer) => {
     
     if(winners.length > 0){
         winners.forEach(element => {
+            
             let p = document.querySelector(`.name${element.id}`);
             p.className += ' winner';
             p.textContent += ` Gana Total: ${element.bet * 1}`;
@@ -144,6 +153,7 @@ const determinateWinner = (cpus, person, dealer) => {
     
     if(loosers.length > 0){
         loosers.forEach(element => {
+            
             let p = document.querySelector(`.name${element.id}`);
             p.className += ' loosers';
             p.textContent += ` Pierde Total: ${element.bet}`;
@@ -237,6 +247,6 @@ dom.raiseButton.addEventListener('click', function(){
 dom.downButton.addEventListener('click', function(){
     player.down = true;
     calculateScore(player)
-    document.querySelector('.dealerButton').style.display = 'block';
+    document.querySelector('.hideElement').className = 'dealerButton';
     dom.askButton.remove();
 });
