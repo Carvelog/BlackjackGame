@@ -112,11 +112,11 @@ const determinateWinner = (cpus, person, dealer) => {
             blackJack.push(scores[0]);
             scores = _.drop(scores);
         }
-        else if(scores[0].score > 21 || scores[0].score <= dealer.score){
+        else if(scores[0].score > 21 || scores[0].score < dealer.score){
             loosers.push(scores[0]);
             scores = _.drop(scores);
         }
-        else if(scores[0].score > dealer.score && scores[0].score < 21){
+        else if(scores[0].score >= dealer.score && scores[0].score < 21){
             winners.push(scores[0]);
             scores = _.drop(scores);
         }
