@@ -1,5 +1,6 @@
 import {generateDeck, distributeCard} from './generateDeck/generateDeck';
-import {generatePlayer, generateLayout, makeCpuBet, calculateScore, downCpuPlayer} from './controlCpu/controlCpu';
+import {makeCpuBet, calculateScore, downCpuPlayer} from './controlCpu/controlCpu';
+import {generateCpuPlayer, generateLayout, generatePlayers} from './generatePlayer/generatePlayer';
 
 const dom = {
     askButton: document.getElementById("askButton"),
@@ -8,29 +9,10 @@ const dom = {
     distributeButton: document.getElementById("distributeButton")
 }
 
-const cpuPlayers = generatePlayer(4);
-let deck = generateDeck();
-
-let dealer = {
-    name: 'Dealer',
-    id: 1,
-    hand: [],
-    score: 0,
-    bet: 0,
-    down: false
-};
-
-let player = {
-    name: 'Player',
-    id: 0,
-    hand: [],
-    bet: 0,
-    score: 0,
-    down: false
-};
-
-let allPlayers = [], blackJack = [], winners = [], loosers = [];
-allPlayers = allPlayers.concat(cpuPlayers, dealer, player);
+const cpuPlayers = generateCpuPlayer(4);
+const deck = generateDeck();
+const dealer = generatePlayers('Dealer', 1);
+const player = generatePlayers('Player', 0);
 
 const makeHand = (parent, person) => {
     let div = document.createElement('div');
@@ -39,9 +21,6 @@ const makeHand = (parent, person) => {
     parent.appendChild(div);
 }
 
-/** @function showHand 
- * muestra la mano de los jugadores
-*/
 const showHand = (person) => {
     if (!person.down){ // si la persona se planto, no se le muestra mas cartas
         if(person.id == 0){ // si es el jugador
@@ -62,9 +41,6 @@ const showHand = (person) => {
     }
 }
 
-/** @function showHand 
- * reparte cartas a los jugadores
-*/
 const giveCard = (person) => {
     if(deck.length > 0){
         if (!person.down) // si la persona se planto no se le da mas cartas
@@ -75,16 +51,6 @@ const giveCard = (person) => {
     }
 }
 
-
-/**
- * Ordenar JSON por medio del valor de una de sus propiedades
- * @author Fernando Magrosoto V. (@fmagrosoto)
- * @example sortJSON(json, propiedad, el orden)
- * @licence MIT
- * @version 1.0
- * @copyleft 2016 - Fernando Magrosoto V.
- * 
- */
 const sortJSON = (data, key, orden) => {
     return data.sort(function (a, b){
         var x = a[key],
@@ -100,29 +66,47 @@ const sortJSON = (data, key, orden) => {
     });
 }
 
-const determinateWinner = (cpus, person, dealer) => {
-    cpus = cpus.concat(person, dealer)
-    let scores = sortJSON(cpus, 'score', 'desc');
-    console.log(scores)
+const selectWinners = (arrayName, array) => {
+    array.forEach(element => {
+        let p = document.querySelector(`.name${element.id}`);
+        p.className += ` ${arrayName}`;
 
-    while(scores.length > 0){
-        console.log(scores[0].id);
-        console.log(scores[0].score);
-        if(scores[0].score == 21 && scores[0].hand.length == 2){
-            blackJack.push(scores[0]);
-            scores = _.drop(scores);
+        switch (arrayName) {
+            case 'blackjack': p.textContent += ` Gana (blackjack) Total: ${element.bet * 1.5}`; 
+            break;
+            case 'loosers': p.textContent += ` Pierde Total: ${element.bet}`;
+            break;
+            case 'winner': p.textContent += ` Gana Total: ${element.bet * 1}`;
+            break;
         }
-        else if(scores[0].score > 21 || scores[0].score < dealer.score){
-            loosers.push(scores[0]);
-            scores = _.drop(scores);
+    })
+}
+
+const determinateWinner = (cpus, person, dealer) => {
+    let blackJack = [], winners = [], loosers = []
+    cpus = cpus.concat(person, dealer)
+    let playersSortedByScore = sortJSON(cpus, 'score', 'desc');
+    console.log(playersSortedByScore)
+
+    while(playersSortedByScore.length > 0){
+        console.log(playersSortedByScore[0].id);
+        console.log(playersSortedByScore[0].score);
+
+        if(playersSortedByScore[0].score == 21 && playersSortedByScore[0].hand.length == 2){
+            blackJack.push(playersSortedByScore[0]);
+            playersSortedByScore = _.drop(playersSortedByScore);
         }
-        else if(scores[0].score >= dealer.score && scores[0].score < 21){
-            winners.push(scores[0]);
-            scores = _.drop(scores);
+        else if(playersSortedByScore[0].score > 21 || playersSortedByScore[0].score < dealer.score){
+            loosers.push(playersSortedByScore[0]);
+            playersSortedByScore = _.drop(playersSortedByScore);
+        }
+        else if(playersSortedByScore[0].score >= dealer.score && playersSortedByScore[0].score < 21){
+            winners.push(playersSortedByScore[0]);
+            playersSortedByScore = _.drop(playersSortedByScore);
         }
         else {
             alert('Ha ocurrido un error.');
-            scores = _.drop(scores);
+            playersSortedByScore = _.drop(playersSortedByScore);
         }
     }
 
@@ -132,32 +116,16 @@ const determinateWinner = (cpus, person, dealer) => {
         element.className = "showAll"
     })
     
-
     if(blackJack.length > 0){
-        blackJack.forEach(element => {
-            
-            let p = document.querySelector(`.name${element.id}`);
-            p.className += ' blackjack';
-            p.textContent += ` Gana (blackjack) Total: ${element.bet * 1.5}`; 
-        })
+        selectWinners('blackjack', blackJack);
     }
     
     if(winners.length > 0){
-        winners.forEach(element => {
-            
-            let p = document.querySelector(`.name${element.id}`);
-            p.className += ' winner';
-            p.textContent += ` Gana Total: ${element.bet * 1}`;
-        })
+        selectWinners('winner', winners);
     }
     
     if(loosers.length > 0){
-        loosers.forEach(element => {
-            
-            let p = document.querySelector(`.name${element.id}`);
-            p.className += ' loosers';
-            p.textContent += ` Pierde Total: ${element.bet}`;
-        })
+        selectWinners('loosers', loosers);
     }
 }
 
@@ -198,6 +166,9 @@ const initGame = () => {
 }
 
 const isGameFinished = () => {
+    let allPlayers = [];
+    allPlayers = allPlayers.concat(cpuPlayers, dealer, player);
+
     let howManyDown = 0;
 
     allPlayers.forEach(element => {
@@ -226,7 +197,7 @@ const cpuTurn = () => {
     }
 }
 
-generateLayout();
+generateLayout(cpuPlayers);
 initGame();
 
 dom.askButton.addEventListener('click', function(){

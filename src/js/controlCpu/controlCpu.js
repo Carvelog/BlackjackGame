@@ -1,19 +1,4 @@
 import {translateCard} from '../generateDeck/generateDeck';
-let players = [];
-
-const generatePlayer = (numPlayers) => {
-    for(let i=2; i<=numPlayers+1; i++){
-        players.push({
-            name: `CPU ${i-1}`,
-            id: i,
-            hand: [],
-            down: false,
-            bet: 0,
-            score: 0
-        })
-    }
-    return players;
-}
 
 const downCpuPlayer = (cpu) => {
     let score = 0;
@@ -71,18 +56,4 @@ const makeCpuBet = (cpu) => {
     }
 }
 
-const generateLayout = () => {
-    let divMesa = document.querySelector('.players');
-
-    for(let i=0; i<players.length; i++){
-        let div = document.createElement('div');
-        div.className = `player cpu${(players[i].id) - 1}`;
-        div.innerHTML = `<p class="name${players[i].id}">CPU ${players[i].id-1}(Jugador)</p>
-                         <p class="cpu${players[i].id}Wager">Apuesta:</p>
-                         <div class="cpuHand"></div>`;
-        divMesa.appendChild(div);
-    }
-
-}
-
-export {generatePlayer, generateLayout, makeCpuBet, downCpuPlayer, calculateScore};
+export {makeCpuBet, downCpuPlayer, calculateScore};
